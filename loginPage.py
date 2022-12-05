@@ -2,7 +2,8 @@ from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk, Image
 import signUp as sU
-
+from user import user
+from user import logInSuccess
 
 class loginPage: 
 
@@ -12,6 +13,7 @@ class loginPage:
 
         username = StringVar()
         password = StringVar()
+
 
         # main window set up
         self.window = window
@@ -59,7 +61,7 @@ class loginPage:
         self.passwordEntry = Entry(self.lgn_frame, highlightthickness=0, relief=FLAT, bg='#F1A742', fg='black', font=('yu gothic ui', 11), show='*', textvariable=password)
         self.passwordEntry.place(x=450, y=227)
         # Log In Button
-        self.loginButton = Button(self.lgn_frame, text='Sign In', bg='#F1A742', fg='black', width=10, cursor='hand2')
+        self.loginButton = Button(self.lgn_frame, text='Sign In', bg='#F1A742', fg='black', width=10, cursor='hand2', command=lambda: user.userLogin(username.get(), password.get()))
         self.loginButton.place(x=492, y=275)
         # Sign Up Buton
         self.signUpButton = Button(self.lgn_frame, text='Not a Member? Sign Up', font=('yu gothic ui', 9, 'underline'), fg='#54c4d8', bg='black', bd=0 ,cursor='hand2', command=sU.openRegisterWindow)
@@ -77,3 +79,5 @@ class loginPage:
         fishTxt = "Gotta Catch 'Em All"
         self.fishHeading = Label(self.lgn_frame, text=fishTxt, font=('Kozuka Mincho Pro L', 20, 'bold'), bg='black', fg='#54c4d8')
         self.fishHeading.place(x=15, y=305)
+
+        # if logInSuccess == True:

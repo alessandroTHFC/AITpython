@@ -2,6 +2,8 @@ from tkinter import *
 from PIL import ImageTk, Image
 import loginPage as lp
 import user as user
+from user import User
+from user import signUpSuccess
 
 
 def openRegisterWindow():
@@ -16,10 +18,10 @@ def openRegisterWindow():
 
     heading = Label(registerWindow, text='Sign Up', bg='black', fg='#54c4d8', font=('yu gothic ui', 25, 'bold'))
     heading.place(x=145, y=10)
-    
+
     # sign up icon
     signUpImg = Image.open('signUpIcon.png')
-    resized= signUpImg.resize((80,80))
+    resized = signUpImg.resize((80, 80))
     img = ImageTk.PhotoImage(resized)
     imgLabel = Label(registerWindow, image=img, bg='black')
     imgLabel.image = img
@@ -28,16 +30,18 @@ def openRegisterWindow():
     # user entry area
     usrLabel = Label(registerWindow, text='Username', bg='black', fg='#54c4d8', font=('yu gothic ui', 14))
     usrLabel.place(x=10, y=160)
-    usrEntry = Entry(registerWindow, highlightthickness=0, relief=FLAT, bg='#F1A742', fg='black', font=('yu gothic ui', 11), width=25,textvariable=username)
+    usrEntry = Entry(registerWindow, highlightthickness=0, relief=FLAT, bg='#F1A742', fg='black',
+                     font=('yu gothic ui', 11), width=25, textvariable=username)
     usrEntry.place(x=110, y=165)
 
     # user password area
     pswLabel = Label(registerWindow, text='Password', bg='black', fg='#54c4d8', font=('yu gothic ui', 14))
     pswLabel.place(x=10, y=225)
-    pswEntry = Entry(registerWindow, highlightthickness=0, relief=FLAT, bg='#F1A742', fg='black', font=('yu gothic ui', 11), width=25, show='*',textvariable=username)
+    pswEntry = Entry(registerWindow, highlightthickness=0, relief=FLAT, bg='#F1A742', fg='black',
+                     font=('yu gothic ui', 11), width=25, show='*', textvariable=password)
     pswEntry.place(x=110, y=229)
 
     # sign up button
-    signupButton = Button(registerWindow, text='Sign Up', bg='#F1A742', fg='black', width=10, cursor='hand2, 'command=user.addUser())
-    signupButton.place(x=170, y=285)
+    signUpButton = Button(registerWindow, text='Sign Up', font=('yu gothic ui', 9), fg='black', bg='#F1A742' ,cursor='hand2', width=10, command=lambda: user.addUser(username.get(), password.get()))
+    signUpButton.place(x=165, y=276)
     # TODO: See if there is a way to close window on successful return of addUser function? OR successful message pops up and on click of button close register window?
