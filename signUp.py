@@ -1,12 +1,13 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import loginPage as lp
-import user as user
-from user import User
-from user import signUpSuccess
 
 
 def openRegisterWindow():
+
+    global registerWindow
+    from user import User
+
     username = StringVar()
     password = StringVar()
 
@@ -42,6 +43,9 @@ def openRegisterWindow():
     pswEntry.place(x=110, y=229)
 
     # sign up button
-    signUpButton = Button(registerWindow, text='Sign Up', font=('yu gothic ui', 9), fg='black', bg='#F1A742' ,cursor='hand2', width=10, command=lambda: user.addUser(username.get(), password.get()))
+    signUpButton = Button(registerWindow, text='Sign Up', font=('yu gothic ui', 9), fg='black', bg='#F1A742' ,cursor='hand2', width=10, command=lambda: User.addUser(username.get(), password.get()))
     signUpButton.place(x=165, y=276)
-    # TODO: See if there is a way to close window on successful return of addUser function? OR successful message pops up and on click of button close register window?
+   
+def closeWindow(value):
+    if value == True:
+        registerWindow.destroy()

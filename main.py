@@ -7,5 +7,6 @@ def page():
         lp.loginPage(window)
         window.mainloop()
 
+
 if __name__ == '__main__':
     page()

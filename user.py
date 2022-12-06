@@ -3,13 +3,16 @@ from tkinter import messagebox
 import hashlib
 import csv
 import os
+import game
+
+import loginPage 
+from signUp import closeWindow
 
 userArray = []
-signUpSuccess = False
-logInSuccess = False
 
 
 class User:
+    loginSuccess = 0
 
     def __init__(self, username, password, highscore):
         self.username = username
@@ -24,7 +27,7 @@ class User:
         for users in userArray:
             if users.username == username:
                 return True
-            return False
+        return False
 
 
 # ====================================== #
@@ -41,7 +44,7 @@ class User:
         for users in userArray:
             if users.password == hashedP:
                 return True
-            return False
+        return False
 
 
 # ====================================== #
@@ -49,20 +52,27 @@ class User:
     # Checks if username and password already exists if so will pop up with error message and return so user can re try
     # creates new User object with username, the hashed password and highscore of 0, pushes it to the array.
     def addUser(username, password):
+
         if User.checkUsername(username) == True:
             messagebox.showerror("Error", "This username is already in use")
             return
 
         hashedP = User.hashPassword(password)
 
-        if User.checkPassword(hashedP) == False:
+        if User.checkPassword(hashedP) == True:
             return
 
         newUser = User(username, hashedP, 0)
         userArray.append(newUser)
+    
+        # * if user sign up is success write their data to database file in append mode ('a)
+        with open('userData.csv', 'a', encoding='UTF8', newline='') as userData:
+            writer = csv.writer(userData)
+            writer.writerow([username, hashedP, 0])
+
         messagebox.showinfo("Success", "Sign Up Successful")
-        signUpSuccess = True
-        #write to file
+        closeWindow(True)
+        
 
 # ====================================== #
     def getUser(username):
@@ -73,15 +83,22 @@ class User:
 # ====================================== #
     def userLogin(username, password):
 
+        if username == '':
+            messagebox.showerror("Error", "Don't Leave It Blank Bitch")
+            return
         # * if username exists in userArray
         if User.checkUsername(username) == True:
             # * runs hash function on string password and returns hash for comparison
             hashedP = User.hashPassword(password)
             if User.checkPassword(hashedP) == True:
+                User.loginSuccess += 1
                 # * if password hash exists in user array run getUser function which returns matching user object and return the user obj
-                userObject = User.getUser(username)
-                print('Logged in')
-                return userObject
+                currUser = User.getUser(username)
+                if User.loginSuccess == 1:
+                    gameWindow = game.Toplevel()
+                    game.Game(gameWindow, currUser)
+                    gameWindow.mainloop()
+                return 
 
             else:
                 return messagebox.showerror("Error", "Password is incorrect")
@@ -97,14 +114,18 @@ class User:
 
             # * if the file exists, it will open it as userData in read mode ('r')
             with open('userData.csv', 'r') as userData:
-                reader = csv.reader(userData)
-
+                reader = csv.reader(userData, delimiter=',')
+                line_count = 0
                 # * for each row in the reader object returned by csv.reader, 
                 # * initialise a new user object with row0(username), row1(password), row3(highscore)
                 # * new user obj is appened to the array
                 for row in reader:
-                    newUserObj = User(row[0], row[1], row[2])
-                    userArray.append(newUserObj)
+                    if line_count == 0:
+                         line_count += 1
+                    else:    
+                
+                        newUserObj = User(row[0], row[1], row[2])
+                        userArray.append(newUserObj)
         else:
             # * header sets template for CSV file as first Row so we know what each value in subsaquent rows stand for
             header = ['username', 'password', 'highscore']
@@ -113,3 +134,5 @@ class User:
             with open('userData.csv', 'w', encoding='UTF', newline='') as userData:
                 writer = csv.writer(userData)
                 writer.writerow(header)
+
+User.importUserData()
