@@ -135,4 +135,17 @@ class User:
                 writer = csv.writer(userData)
                 writer.writerow(header)
 
+
+    def updateHighscore(userObject, currScore):
+        if currScore > userObject.highscore:
+            userObject.highscore = currScore
+        header = ['username', 'password', 'highscore']
+        with open('userData.csv', 'w', encoding='UTF', newline='') as userData:
+                writer = csv.writer(userData)
+                writer.writerow(header)
+        with open('userData.csv', 'a', encoding='UTF8', newline='') as usr:
+            writer = csv.writer(usr)
+            for usr in userArray:
+                writer.writerow([usr.username, usr.password, usr.highscore])
+
 User.importUserData()
